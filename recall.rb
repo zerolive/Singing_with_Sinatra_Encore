@@ -1,6 +1,14 @@
 require 'rubygems'
 require 'sinatra'
 require 'data_mapper'
+#require 'rack-flash'
+#require 'sinatra/redirect_with_flash'
+ 
+#enable :sessions
+#use Rack::Flash, :sweep => true
+
+SITE_TITLE = "Recall"
+SITE_DESCRIPTION = "'cause you're too busy to remember"
 
 DataMapper::setup(:default, "sqlite3://#{Dir.pwd}/recall.db")
  
@@ -15,10 +23,18 @@ end
  
 DataMapper.finalize.auto_upgrade!
 
+helpers do
+    include Rack::Utils
+    alias_method :h, :escape_html
+end
+
 get '/' do
-  @notes = Note.all :order => :id.desc
-  @title = 'All Notes'
-  erb :home
+    @notes = Note.all :order => :id.desc
+    @title = 'All Notes'
+    if @notes.empty?
+#        flash[:error] = 'No notes found. Add your first below.'
+    end
+    erb :home
 end
 
 post '/' do
@@ -63,4 +79,9 @@ get '/:id/complete' do
   n.updated_at = Time.now
   n.save
   redirect '/'
+end
+
+get '/rss.xml' do
+    @notes = Note.all :order => :id.desc
+    builder :rss
 end

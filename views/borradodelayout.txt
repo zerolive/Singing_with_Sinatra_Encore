@@ -1,0 +1,9 @@
+esto va despues de yield
+
+<% if flash[:notice] %>
+      <p class="notice"><%= flash[:notice] %>
+    <% end %>
+ 
+    <% if flash[:error] %>
+      <p class="error"><%= flash[:error] %>
+    <% end %>

@@ -1,3 +1,6 @@
+.notice { color: green; }
+.error { color: red; }
+
 body {
     margin: 35px auto;
     width: 640px;
